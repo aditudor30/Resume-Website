@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adi - AI Solutions Creator, Developer & DevOps Enthusiast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Indigo Light / Graphite Mint Dark -->
+    <!-- Application Structure Plan: A single-page application (SPA) with a top navigation bar for smooth-scrolling to four key sections: Home (Hero), About, Projects, and Contact. This SPA structure adapts the user's multi-page plan for a fluid, modern, single-page experience. The primary user flow is top-to-bottom or via nav-link jumps. The 'Projects' section is interactive, with filters for 'AI/ML', 'Web Dev', and 'DevOps' to showcase the user's prioritized triple-focus. -->
+    <!-- Visualization & Content Choices: Report Info (Portfolio Plan) -> Goal -> Presentation Method -> Interaction -> Justification.
+    1.  Hero Section: (Goal: Immediate identity) -> HTML/Text -> None -> Clearly states the user's new primary identity: 'AI Solutions Creator'.
+    2.  About Me: (Goal: Detail identity) -> HTML (2-col text, lists, timeline) -> None -> Bio and Skills sections are modified to prominently feature AI/ML. The "CAR" section provides concrete proof of AI value.
+    3.  Projects: (Goal: Showcase proof of work) -> Interactive Grid (HTML/JS) -> JS-based filtering -> This interaction is crucial. It allows visitors to *explore* projects based on the user's three key skills (AI, Dev, DevOps), which is more engaging than a static list and supports the SPA design.
+    4.  Timeline: (Goal: Show career progression) -> Vertical Timeline (HTML/CSS) -> None -> Visually represents the 'My Journey' section from the plan.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+
+        :root {
+          /* New Indigo Light Theme */
+          --bg: #F8FAFC;
+          --bg-section: #FFFFFF;
+          --bg-header: rgba(248, 250, 252, 0.6); /* --bg w/ 60% opacity */
+          --text-primary: #1E293B;
+          --text-secondary: #475569;
+          --text-accent: #4F46E5;
+          --card-bg: #FFFFFF;
+          --card-border: #E2E8F0;
+          --btn-primary-bg: #6366F1;
+          --btn-primary-text: #FFFFFF;
+          --btn-secondary-bg: #475569; /* Using secondary text as bg */
+          --btn-secondary-text: #FFFFFF;
+          --btn-filter-bg: #E2E8F0; /* Subtle border color */
+          --btn-filter-text: #475569;
+          --btn-filter-hover: #FFFFFF; /* Hover: card color */
+          --btn-filter-active-bg: #4F46E5; /* Accent color */
+          --btn-filter-active-text: #FFFFFF;
+          --icon-color: #475569;
+          --icon-hover: #4F46E5;
+          --timeline-border: #E2E8F0;
+          --timeline-dot-bg: #4F46E5;
+          --timeline-dot-border: #FFFFFF;
+          --shadow-color: rgba(0, 0, 0, 0.05);
+          --shadow-color-inset: rgba(0, 0, 0, 0.02);
+          --gradient-from: #4F46E5;
+          --gradient-to: #6366F1;
+        }
+
+        html.dark {
+          /* Unchanged Dark Theme */
+          --bg: #121212;
+          --bg-section: rgba(29, 29, 29, 0.5); 
+          --bg-header: rgba(18, 18, 18, 0.6);
+          --text-primary: #E0E0E0;
+          --text-secondary: #9ca3af;
+          --text-accent: #50E3C2;
+          --card-bg: #1E1E1E;
+          --card-border: #374151;
+          --btn-primary-bg: #50E3C2;
+          --btn-primary-text: #1f2937;
+          --btn-secondary-bg: #e5e7eb;
+          --btn-secondary-text: #1f2937;
+          --btn-filter-bg: #374151;
+          --btn-filter-text: #d1d5db;
+          --btn-filter-hover: #4b5563;
+          --btn-filter-active-bg: #50E3C2;
+          --btn-filter-active-text: #1f2937;
+          --icon-color: #9ca3af;
+          --icon-hover: #50E3C2;
+          --timeline-border: #50E3C2;
+          --timeline-dot-bg: #50E3C2;
+          --timeline-dot-border: #1E1E1E;
+          --shadow-color: rgba(80, 227, 194, 0.1);
+          --shadow-color-inset: rgba(80, 227, 194, 0.05);
+          --gradient-from: #50E3C2;
+          --gradient-to: #3b82f6;
+        }
+
+        /* Global styles */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-secondary); /* Body copy uses secondary text */
+        }
+
+        .header-bg {
+            background-color: var(--bg-header);
+            border-bottom-color: var(--card-border);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 1px 3px var(--shadow-color); /* Subtle base shadow */
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--timeline-dot-bg);
+            border: 4px solid var(--timeline-dot-border);
+        }
+
+        /* Nav link styles */
+        .nav-link {
+            color: var(--text-primary);
+        }
+        .nav-link:hover {
+            color: var(--text-accent);
+        }
+        .nav-link.active {
+            color: var(--text-accent);
+            font-weight: 500;
+        }
+
+        .mobile-nav-link.active {
+            background-color: var(--btn-filter-bg);
+        }
+        
+        /* Project card hover */
+        .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -2px var(--shadow-color-inset);
+        }
+
+        /* Filter Button Styles */
+        .filter-btn {
+            background-color: var(--btn-filter-bg);
+            color: var(--btn-filter-text);
+        }
+        .filter-btn:hover {
+            background-color: var(--btn-filter-hover);
+        }
+        .filter-btn.active {
+            background-color: var(--btn-filter-active-bg);
+            color: var(--btn-filter-active-text);
+        }
+    </style>
+</head>
+<body class="transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 w-full backdrop-blur-md header-bg border-b">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Name -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--gradient-from)] to-[var(--gradient-to)]">Tudor-Adrian Cristea</a>
+                </div>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex md:items-center md:space-x-8">
+                    <a href="#home" class="nav-link transition-colors" data-section="home">Home</a>
+                    <a href="#about" class="nav-link transition-colors" data-section="about">About</a>
+                    <a href="#projects" class="nav-link transition-colors" data-section="projects">Projects</a>
+                    <a href="#contact" class="nav-link transition-colors" data-section="contact">Contact</a>
+                </div>
+
+                <!-- Theme Toggle & Mobile Menu Button -->
+                <div class="flex items-center">
+                    <button id="theme-toggle" aria-label="Toggle dark mode" class="p-2 rounded-full text-[var(--icon-color)] hover:text-[var(--text-primary)] hover:bg-[var(--btn-filter-bg)] transition-colors">
+                        <!-- Sun Icon -->
+                        <svg id="theme-icon-sun" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <!-- Moon Icon -->
+                        <svg id="theme-icon-moon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden ml-2">
+                        <button id="mobile-menu-button" class="p-2 rounded-md text-[var(--icon-color)] hover:text-[var(--text-primary)] hover:bg-[var(--btn-filter-bg)] transition-colors" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <svg id="menu-icon-open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                            <svg id="menu-icon-close" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden border-t border-[var(--card-border)]">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-[var(--text-primary)] hover:bg-[var(--btn-filter-bg)]" data-section="home">Home</a>
+                <a href="#about" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-[var(--text-primary)] hover:bg-[var(--btn-filter-bg)]" data-section="about">About</a>
+                <a href="#projects" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-[var(--text-primary)] hover:bg-[var(--btn-filter-bg)]" data-section="projects">Projects</a>
+                <a href="#contact" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-[var(--text-primary)] hover:bg-[var(--btn-filter-bg)]" data-section="contact">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home/Hero Section -->
+        <section id="home" class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-[var(--text-primary)] leading-tight">
+                    Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--gradient-from)] to-[var(--gradient-to)]">Adi</span>.
+                </h1>
+                <h2 class="mt-4 text-2xl md:text-3xl font-semibold text-[var(--text-primary)]">
+                    AI Solutions Creator, Software Developer & DevOps Enthusiast
+                </h2>
+                <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">
+                    My passion is turning complex problems into elegant, AI-driven software solutions, all running on robust and scalable infrastructure.
+                </p>
+                <div class="mt-10 flex flex-wrap justify-center gap-4">
+                    <a href="#projects" class="px-8 py-3 bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] font-medium rounded-lg shadow-lg hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105">
+                        View My Work
+                    </a>
+                    <a href="#contact" class="px-8 py-3 bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-text)] font-medium rounded-lg shadow-lg hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105">
+                        Get In Touch
+                    </a>
+                </div>
+                <div class="mt-12 flex justify-center space-x-6">
+                    <a href="https://www.github.com/aditudor30" aria-label="GitHub" class="text-[var(--icon-color)] hover:text-[var(--text-accent)] transition-colors">
+                        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.026 2.747-1.026.546 1.379.201 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="LinkedIn" class="text-[var(--icon-color)] hover:text-[var(--text-accent)] transition-colors">
+                        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 sm:py-32 bg-[var(--bg-section)]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-center text-[var(--text-primary)]">About Me</h2>
+                
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+                    <!-- Photo -->
+                    <div class="flex justify-center md:col-span-1">
+                        <div class="w-64 h-64 rounded-full bg-gradient-to-br from-[var(--gradient-from)] to-[var(--gradient-to)] p-1.5 shadow-2xl">
+                            <img class="w-full h-full rounded-full object-cover" 
+                                 src="./assets/photo_of_me.jpg" 
+                                 alt="Professional photograph of Adi">
+                        </div>
+                    </div>
+                    
+                    <!-- Bio -->
+                    <div class="md:col-span-2">
+                        <h3 class="text-2xl font-bold text-[var(--text-primary)]">My Story</h3>
+                        <p class="mt-4 text-lg text-[var(--text-secondary)]">
+                            As a final year electronics engineering and computer science student, I have cultivated and applied the fundamentals varied programming with a clear focus on artificial intelligence. Through participating in AI-focused hackathons, I discovered my passion for artificial intelligence and began developing meaningful projects in the field. Now my tech stack has grown increasingly larger, allowing me to integrate my AI models into websites using JavaScript and CSS, automating them with pipelines utilizing ArgoCD and GitHub Actions, and deploy finished software applications with Vercel or Azure.
+                        </p>
+                        <p class="mt-4 text-lg text-[var(--text-secondary)]">
+                            As of now, I am working on deepening my skills in AI, applying advanced techniques in projects such as NLP, Computer Vision and Reinforcement Learning. My goal is to design comprehensive AI tools using my expertise in these fields. My background in competitive swimming has imprinted discipline and goal-oriented thinking that I apply to my projects by setting clear objectives and making sure I complete them. Also, traveling whenever possible gives me inspiration for my next projects.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Technical Skills -->
+                <div class="mt-20">
+                    <h3 class="text-2xl font-bold text-center text-[var(--text-primary)]">Technical Skills</h3>
+                    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        
+                        <div class="card p-6 rounded-xl shadow-lg">
+                            <h4 class="text-xl font-semibold text-[var(--text-accent)]">AI & Machine Learning</h4>
+                            <ul class="mt-4 space-y-2 text-[var(--text-secondary)]">
+                                <li>Python</li>
+                                <li>TensorFlow & PyTorch</li>
+                                <li>LangChain & LLMs</li>
+                                <li>Scikit-learn</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="card p-6 rounded-xl shadow-lg">
+                            <h4 class="text-xl font-semibold text-[var(--text-accent)]">Languages & Frontend</h4>
+                            <ul class="mt-4 space-y-2 text-[var(--text-secondary)]">
+                                <li>React & Next.js</li>
+                                <li>HTML5 & CSS3</li>
+                                <li>Tailwind CSS</li>
+                            </ul>
+                        </div>
+
+                        <div class="card p-6 rounded-xl shadow-lg">
+                            <h4 class="text-xl font-semibold text-[var(--text-accent)]">Backend & Databases</h4>
+                            <ul class="mt-4 space-y-2 text-[var(--text-secondary)]">
+                                <li>Node.js</li>
+                                <li>Python (Flask, FastAPI)</li>
+                                <li>SQL (PostgreSQL)</li>
+                                <li>NoSQL (MongoDB)</li>
+                            </ul>
+                        </div>
+
+                        <div class="card p-6 rounded-xl shadow-lg">
+                            <h4 class="text-xl font-semibold text-[var(--text-accent)]">DevOps & Cloud</h4>
+                            <ul class="mt-4 space-y-2 text-[var(--text-secondary)]">
+                                <li>Docker & Kubernetes</li>
+                                <li>GitHub Actions (CI/CD)</li>
+                                <li>ArgoCD (GitOps)</li>
+                                <li>Terraform</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <!-- My Journey & Achievements -->
+                <div class="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <!-- Journey Timeline -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-center lg:text-left text-[var(--text-primary)]">My Journey</h3>
+                        <div class="mt-10 relative border-l-2 border-[var(--timeline-border)] ml-4 pl-8 space-y-12">
+                            <div class="timeline-item relative">
+                                <h4 class="text-xl font-semibold text-[var(--text-primary)]">University Graduation</h4>
+                                <p class="text-sm text-[var(--text-secondary)]">B.S. in Electronics Engineering and Computer Science (ongoing)</p>
+                                <p class="mt-2 text-[var(--text-secondary)]">Graduating in summer of 2026, focusing on applied electronics and artificial intelligence.</p>
+                            </div>
+                            <div class="timeline-item relative">
+                                <h4 class="text-xl font-semibold text-[var(--text-primary)]">Devpops Engineer Intern</h4>
+                                <p class="text-sm text-[var(--text-secondary)]">Metaminds</p>
+                                <p class="mt-2 text-[var(--text-secondary)]">Fully automated and launched a startup website.</p>
+                            </div>
+                            <div class="timeline-item relative">
+                                <h4 class="text-xl font-semibold text-[var(--text-primary)]">AI/ML Crash Course by Google</h4>
+                                <p class="text-sm text-[var(--text-secondary)]">Online Course</p>
+                                <p class="mt-2 text-[var(--text-secondary)]">Completed a specialization in machine learning and deep learning.</p>
+                            </div>
+                            <div class="timeline-item relative">
+                                <h4 class="text-xl font-semibold text-[var(--text-primary)]">NXP-Eat-Sleep-Code-Repeat</h4>
+                                <p class="text-sm text-[var(--text-secondary)]">Project Powered by NXP</p>
+                                <p class="mt-2 text-[var(--text-secondary)]">Developed core automotive functionalities (braking, lighting, transmission, steering) on the S32K144 microcontroller.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quantifiable Achievements -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-center lg:text-left text-[var(--text-primary)]">Quantifiable Achievements</h3>
+                        <div class="mt-10 space-y-8">
+                            <div class="card p-6 rounded-xl shadow-lg">
+                                <p class="text-sm font-semibold text-[var(--text-accent)]">CHALLENGE</p>
+                                <p class="mt-1 text-[var(--text-secondary)]">Needed to show my work in a novel way</p>
+                                <p class="mt-3 text-sm font-semibold text-[var(--text-accent)]">ACTION</p>
+                                <p class="mt-1 text-[var(--text-secondary)]">Designed and implemented a fully working resume site which showcases my portfolio.</p>
+                                <p class="mt-3 text-sm font-semibold text-[var(--text-accent)]">RESULT</p>
+                                <p class="mt-1 text-[var(--text-secondary)]">This Website!:D</p>
+                            </div>
+                            <div class="card p-6 rounded-xl shadow-lg">
+                                <p class="text-sm font-semibold text-[var(--text-accent)]">CHALLENGE</T>
+                                <p class="mt-1 text-[var(--text-secondary)]">Application deployment process was manual, slow, and error-prone.</p>
+                                <p class="mt-3 text-sm font-semibold text-[var(--text-accent)]">ACTION</p>
+                                <p class="mt-1 text-[var(--text-secondary)]">Implemented a full CI/CD pipeline using GitHub Actions and Podman, deploying to Kubernetes with ArgoCD.</p>
+                                <p class="mt-3 text-sm font-semibold text-[var(--text-accent)]">RESULT</p>
+                                <p class="mt-1 text-[var(--text-secondary)]">Reduced deployment time to only 2 minutes and eliminated 99% of deployment-related errors.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 sm:py-32">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-center text-[var(--text-primary)]">Projects</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-center text-lg text-[var(--text-secondary)]">
+                    A selection of my work. Filter by category to see my expertise in action.
+                </p>
+
+                <!-- Project Filters -->
+                <div id="project-filters" class="mt-10 flex flex-wrap justify-center gap-2 md:gap-4">
+                    <button class="filter-btn active px-4 py-2 font-medium rounded-lg" data-filter="all">All</button>
+                    <button class="filter-btn px-4 py-2 font-medium rounded-lg" data-filter="ai">AI / ML</button>
+                    <button class="filter-btn px-4 py-2 font-medium rounded-lg" data-filter="web">Web Dev</button>
+                    <button class="filter-btn px-4 py-2 font-medium rounded-lg" data-filter="devops">DevOps</button>
+                </div>
+
+                <!-- Project Grid -->
+                <div id="project-grid" class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project Card 1 (AI) -->
+                    <div class="project-card card rounded-xl shadow-lg overflow-hidden flex flex-col" data-category="ai">
+                        <img class="h-48 w-full object-cover" src="https://placehold.co/600x400/1E1E1E/50E3C2?text=CNN+Deblurring" alt="Deblurring Project using CNN">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-[var(--text-primary)]">Image Deblurring with CNN</h3>
+                            <p class="mt-2 text-[var(--text-secondary)] flex-grow">A project meant to show how convolutional neural networks (CNN) can be used to sharpen blurred images.</p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full">Python</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-full">FastAPI</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200 rounded-full">React</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-full">LangChain</span>
+                            </div>
+                            <div class="mt-6 flex space-x-4">
+                                <a href="Image Deblurring with CNN" class="font-medium text-[var(--text-accent)] hover:underline">GitHub</a>
+                                <a href="https://github.com/aditudor30/Image-Deblurring-with-CNN" class="font-medium text-[var(--text-accent)] hover:underline">Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 2 (DevOps) -->
+                    <div class="project-card card rounded-xl shadow-lg overflow-hidden flex flex-col" data-category="ai">
+                        <img class="h-48 w-full object-cover" src="https://placehold.co/600x400/1E1E1E/50E3C2?text=Regression+Projects" alt="Regression Projects">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-[var(--text-primary)]">Regression Projects</h3>
+                            <p class="mt-2 text-[var(--text-secondary)] flex-grow">Diverse projects showcasing basic predictive regression algorithms.</p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200 rounded-full">Python</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 rounded-full">Scikit-learn</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200 rounded-full">Jupyter Notebook</span>
+                            </div>
+                            <div class="mt-6 flex space-x-4">
+                                <a href="https://github.com/aditudor30/Regression-Projects" class="font-medium text-[var(--text-accent)] hover:underline">GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 3 (Web) -->
+                    <div class="project-card card rounded-xl shadow-lg overflow-hidden flex flex-col" data-category="web">
+                        <img class="h-48 w-full object-cover" src="https://placehold.co/600x400/1E1E1E/50E3C2?text=This+Page" alt="My Resume Page">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-[var(--text-primary)]">My Resume page</h3>
+                            <p class="mt-2 text-[var(--text-secondary)] flex-grow">A website dedicated to showcasing my past, present and future work. Check it out right here!</p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 rounded-full">Java/Javascript</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full">Podman</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-full">Kubernetes</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full">ArgoCD</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Card 4 (AI) -->
+                    <div class="project-card card rounded-xl shadow-lg overflow-hidden flex flex-col" data-category="ai">
+                        <img class="h-48 w-full object-cover" src="https://placehold.co/600x400/1E1E1E/50E3C2?text=K-Means+Clustering" alt="K-Means Clustering Project">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-[var(--text-primary)]">K-Means Clustering Project</h3>
+                            <p class="mt-2 text-[var(--text-secondary)] flex-grow">An implementation from scratch of the K-Means algorithm to see patterns between certain stats of footballers such as age, rating, potential, wage.</p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-full">Python</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full">Scikit-learn</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full">Clustering</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 rounded-full">Data Analysis</span>
+                            </div>
+                            <div class="mt-6 flex space-x-4">
+                                <a href="https://github.com/aditudor30/K-Means-Clustering-FIFA-Ratings" class="font-medium text-[var(--text-accent)] hover:underline">GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Card 5 (Web + DevOps) -->
+                    <div class="project-card card rounded-xl shadow-lg overflow-hidden flex flex-col" data-category="web devops">
+                        <img class="h-48 w-full object-cover" src="https://placehold.co/600x400/1E1E1E/50E3C2?text=CI/CD+for+Web" alt="CI/CD for Web Project">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-[var(--text-primary)]">Fully Automated CI/CD GitOps Pipeline</h3>
+                            <p class="mt-2 text-[var(--text-secondary)] flex-grow">This project demonstrates a complete, end-to-end CI/CD lifecycle for a web application using modern DevOps tools and the GitOps methodology.</p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 rounded-full">GitHub Actions</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full">Docker</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-full">Kubernetes</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full">Ansible</span>
+                            </div>
+                            <div class="mt-6 flex space-x-4">
+                                <a href="https://github.com/aditudor30/gitops-repo" class="font-medium text-[var(--text-accent)] hover:underline">GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 sm:py-32 bg-[var(--bg-section)]">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--text-primary)]">Get In Touch</h2>
+                <p class="mt-4 max-w-xl mx-auto text-lg text-[var(--text-secondary)]">
+                    I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+                </p>
+                <a href=mailto:tudor.adrian.cristea@gmail.com class="mt-10 inline-block px-12 py-4 bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] text-lg font-medium rounded-lg shadow-lg hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105">
+                    Let's Collaborate
+                </a>
+                <div class="mt-12 flex justify-center space-x-6">
+                    <a href="https://www.github.com/aditudor30" aria-label="GitHub" class="text-[var(--icon-color)] hover:text-[var(--text-accent)] transition-colors">
+                        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.026 2.747-1.026.546 1.379.201 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/tudor-adrian-cristea-2674932b8/" aria-label="LinkedIn" class="text-[var(--icon-color)] hover:text-[var(--text-accent)] transition-colors">
+                        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-[var(--card-border)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <p class="text-sm text-[var(--text-secondary)]">
+                &copy; <span id="current-year"></span> Tudor-Adrian Cristea. All rights reserved.
+            </p>
+            <div class="flex space-x-6 mt-4 md:mt-0">
+                <a href="https://www.github.com/aditudor30" aria-label="GitHub" class="text-[var(--icon-color)] hover:text-[var(--text-accent)] transition-colors">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.026 2.747-1.026.546 1.379.201 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/in/tudor-adrian-cristea-2674932b8/" aria-label="LinkedIn" class="text-[var(--icon-color)] hover:text-[var(--text-accent)] transition-colors">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const sunIcon = document.getElementById('theme-icon-sun');
+            const moonIcon = document.getElementById('theme-icon-moon');
+            const htmlEl = document.documentElement;
+
+            function updateThemeIcon() {
+                if (htmlEl.classList.contains('dark')) {
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                } else {
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+            }
+
+            themeToggle.addEventListener('click', () => {
+                htmlEl.classList.toggle('dark');
+                localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
+                updateThemeIcon();
+            });
+
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                htmlEl.classList.add('dark');
+            } else {
+                htmlEl.classList.remove('dark');
+            }
+            updateThemeIcon();
+
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIconOpen = document.getElementById('menu-icon-open');
+            const menuIconClose = document.getElementById('menu-icon-close');
+
+            mobileMenuButton.addEventListener('click', () => {
+                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+                menuIconOpen.classList.toggle('hidden');
+                menuIconClose.classList.toggle('hidden');
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                    if (mobileMenu.classList.contains('hidden') === false) {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuButton.setAttribute('aria-expanded', 'false');
+                        menuIconOpen.classList.remove('hidden');
+                        menuIconClose.classList.add('hidden');
+                    }
+                });
+            });
+
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const projectGrid = document.getElementById('project-grid');
+            const projectCards = projectGrid.querySelectorAll('.project-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.getAttribute('data-filter');
+                    
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    button.classList.add('active');
+
+                    projectCards.forEach(card => {
+                        const categories = card.getAttribute('data-category');
+                        if (filter === 'all' || categories.includes(filter)) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeSectionId = entry.target.id;
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('data-section') === activeSectionId);
+                        });
+                        mobileNavLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('data-section') === activeSectionId);
+                        });
+                    }
+                });
+            }, { rootMargin: '-50% 0px -50% 0px', threshold: 0.1 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                     mobileMenu.classList.add('hidden');
+                     mobileMenuButton.setAttribute('aria-expanded', 'false');
+                     menuIconOpen.classList.remove('hidden');
+                     menuIconClose.classList.add('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
